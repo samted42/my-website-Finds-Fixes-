@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sam Teddy | [Site name]</title>
+  <meta name="description" content="[One sentence describing what this site helps people choose.]">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="#top">Sam Teddy</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a class="n-tech" href="#tech">Tech</a></li>
+        <li><a class="n-home" href="#home">Home</a></li>
+        <li><a class="n-fash" href="#fashion">Fashion</a></li>
+        <li><a class="n-fit" href="#fitness">Fitness</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <h1><span>We find the best products.</span> <span>You get the perfect products.</span></h1>
+      <p class="lead">Your all in one portal for finding top-tier products and fixing shopping confusion.</p>
+      <form class="search" role="search" action="#">
+        <label class="sr" for="q">Search products and guides</label>
+        <input id="q" type="search" placeholder="Search products or guides">
+        <button class="btn" type="submit">Search</button>
+      </form>
+      <ul class="chips" aria-label="Browse by category">
+        <li><a class="chip n-tech" href="#tech">Tech</a></li>
+        <li><a class="chip n-home" href="#home">Home</a></li>
+        <li><a class="chip n-fash" href="#fashion">Fashion</a></li>
+        <li><a class="chip n-fit" href="#fitness">Fitness</a></li>
+      </ul>
+      <p class="note">Some links on this site are affiliate links. <a href="#disclosure">Read the disclosure</a>.</p>
+    </div>
+  </section>
+
+  <section class="section" id="trending">
+    <div class="wrap">
+      <h2>Trending reviews</h2>
+      <ul class="cards">
+        <li class="card n-tech">
+          <div class="thumb" role="img" aria-label="Placeholder for product photo"></div>
+          <p class="niche">Tech</p>
+          <h3><a href="#">[Review title]</a></h3>
+          <p>[One-line verdict.]</p>
+        </li>
+        <li class="card n-home">
+          <div class="thumb" role="img" aria-label="Placeholder for product photo"></div>
+          <p class="niche">Home</p>
+          <h3><a href="#">[Review title]</a></h3>
+          <p>[One-line verdict.]</p>
+        </li>
+        <li class="card n-fash">
+          <div class="thumb" role="img" aria-label="Placeholder for product photo"></div>
+          <p class="niche">Fashion</p>
+          <h3><a href="#">[Review title]</a></h3>
+          <p>[One-line verdict.]</p>
+        </li>
+        <li class="card n-fit">
+          <div class="thumb" role="img" aria-label="Placeholder for product photo"></div>
+          <p class="niche">Fitness</p>
+          <h3><a href="#">[Review title]</a></h3>
+          <p>[One-line verdict.]</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-white" aria-labelledby="browse">
+    <div class="wrap">
+      <h2 id="browse">Browse by category</h2>
+      <ul class="tiles">
+        <li class="tile n-tech" id="tech">
+          <h3>Tech</h3>
+          <ul><li><a href="#">[Sub-category]</a></li><li><a href="#">[Sub-category]</a></li><li><a href="#">[Sub-category]</a></li></ul>
+        </li>
+        <li class="tile n-home" id="home">
+          <h3>Home</h3>
+          <ul><li><a href="#">[Sub-category]</a></li><li><a href="#">[Sub-category]</a></li><li><a href="#">[Sub-category]</a></li></ul>
+        </li>
+        <li class="tile n-fash" id="fashion">
+          <h3>Fashion</h3>
+          <ul><li><a href="#">[Sub-category]</a></li><li><a href="#">[Sub-category]</a></li><li><a href="#">[Sub-category]</a></li></ul>
+        </li>
+        <li class="tile n-fit" id="fitness">
+          <h3>Fitness</h3>
+          <ul><li><a href="#">[Sub-category]</a></li><li><a href="#">[Sub-category]</a></li><li><a href="#">[Sub-category]</a></li></ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="winners">
+    <div class="wrap">
+      <h2>Current winners</h2>
+      <p>[One line on how often these picks are updated.]</p>
+      <ul class="rows">
+        <!-- Replace each href="#" with your /go/ link. Keep rel="sponsored" on every affiliate link. -->
+        <li class="row n-tech">
+          <div class="thumb" role="img" aria-label="Placeholder for product photo"></div>
+          <div>
+            <p class="badge">Best overall</p>
+            <h3>[Product name]</h3>
+            <p>[One-line verdict.]</p>
+          </div>
+          <a class="btn" href="#" rel="sponsored noopener">Check price</a>
+        </li>
+        <li class="row n-home">
+          <div class="thumb" role="img" aria-label="Placeholder for product photo"></div>
+          <div>
+            <p class="badge">Best budget</p>
+            <h3>[Product name]</h3>
+            <p>[One-line verdict.]</p>
+          </div>
+          <a class="btn" href="#" rel="sponsored noopener">Check price</a>
+        </li>
+        <li class="row n-fash">
+          <div class="thumb" role="img" aria-label="Placeholder for product photo"></div>
+          <div>
+            <p class="badge">Best for [use]</p>
+            <h3>[Product name]</h3>
+            <p>[One-line verdict.]</p>
+          </div>
+          <a class="btn" href="#" rel="sponsored noopener">Check price</a>
+        </li>
+        <li class="row n-fit">
+          <div class="thumb" role="img" aria-label="Placeholder for product photo"></div>
+          <div>
+            <p class="badge">Best overall</p>
+            <h3>[Product name]</h3>
+            <p>[One-line verdict.]</p>
+          </div>
+          <a class="btn" href="#" rel="sponsored noopener">Check price</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-white" id="method">
+    <div class="wrap two">
+      <div>
+        <h2>How I choose</h2>
+        <p>[Two or three sentences on how you pick and rank products, and why readers can trust it.]</p>
+      </div>
+      <div id="disclosure">
+        <h2>Affiliate disclosure</h2>
+        <!-- Check the rules for your country and each affiliate program, and adjust this wording. -->
+        <p>Some links on this site are affiliate links. If you buy through them, I may earn a commission at no extra cost to you. [Add anything else your programs require.]</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="brand">Sam Teddy</p>
+    <ul>
+      <li><a href="#tech">Tech</a></li>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#fashion">Fashion</a></li>
+      <li><a href="#fitness">Fitness</a></li>
+      <li><a href="#disclosure">Disclosure</a></li>
+    </ul>
+    <p>© 2026 Sam Teddy</p>
+  </div>
+</footer>
+
+<script src="supabase-config.js"></script>
+<script src="products.js"></script>
+<script src="site.js"></script>
+
+</body>
+</html>

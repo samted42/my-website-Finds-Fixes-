@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Admin | Sam Teddy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4"></script>
+  <script src="supabase-config.js"></script>
+</head>
+<body class="admin">
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="index.html">Sam Teddy</a>
+    <nav aria-label="Admin">
+      <ul>
+        <li><a class="n-tech" href="index.html">View site</a></li>
+        <li><button class="btn btn-quiet" type="button" id="logout" hidden>Log out</button></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section" id="setup" hidden>
+    <div class="wrap">
+      <h1 class="admin-title">Setup needed</h1>
+      <p>Open <code>supabase-config.js</code> and paste in your Supabase project URL and anon public key, then redeploy.</p>
+    </div>
+  </section>
+
+  <section class="section" id="loginBox" hidden>
+    <div class="wrap">
+      <h1 class="admin-title">Log in</h1>
+      <form id="loginForm" class="login">
+        <label>Email <input id="email" type="email" required autocomplete="username"></label>
+        <label>Password <input id="password" type="password" required autocomplete="current-password"></label>
+        <button class="btn" type="submit">Log in</button>
+      </form>
+    </div>
+  </section>
+
+  <p class="wrap msg" id="msg" role="status" aria-live="polite"></p>
+
+  <div id="app" hidden>
+    <section class="section section-white">
+      <div class="wrap">
+        <h2>1. Affiliate stores</h2>
+        <form id="storeForm">
+          <label>Store name <input id="sName" required maxlength="60" placeholder="[Store name]"></label>
+          <label>Affiliate network (optional) <input id="sNet" maxlength="60" placeholder="[e.g. the network or program name]"></label>
+          <button class="btn" type="submit">Add store</button>
+        </form>
+        <ul class="list" id="storeList"></ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>2. Products</h2>
+        <form id="productForm">
+          <label>Product name <input id="pName" required maxlength="80" placeholder="[Product name]"></label>
+          <label>Store <select id="pStore" required></select></label>
+          <label>Category
+            <select id="pNiche">
+              <option value="tech">Tech</option><option value="home">Home</option>
+              <option value="fash">Fashion</option><option value="fit">Fitness</option>
+            </select>
+          </label>
+          <label>Badge (optional) <input id="pBadge" maxlength="40" placeholder="Best overall"></label>
+          <label>One-line verdict <input id="pVerdict" maxlength="140" placeholder="[Your honest verdict]"></label>
+          <label>Image (optional) <input id="pImg" placeholder="https://... or images/photo.jpg"></label>
+          <label>Affiliate link <input id="pLink" required type="url" placeholder="https://..."></label>
+          <button class="btn" type="submit">Add product</button>
+        </form>
+        <ul class="list" id="productList"></ul>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  var cfg = window.SB_CONFIG || {}, NICHES = { tech: 'Tech', home: 'Home', fash: 'Fashion', fit: 'Fitness' };
+  function $(id) { return document.getElementById(id); }
+  function say(t) { $('msg').textContent = t; }
+
+  if (!window.supabase || !cfg.url || !cfg.key || /PASTE/.test(cfg.url + cfg.key)) { $('setup').hidden = false; return; }
+
+  var sb = window.supabase.createClient(cfg.url, cfg.key), stores = [], products = [];
+
+  function show(loggedIn) {
+    $('loginBox').hidden = loggedIn; $('app').hidden = !loggedIn; $('logout').hidden = !loggedIn;
+  }
+  function row(text, onRemove) {
+    var li = document.createElement('li'), sp = document.createElement('span'), b = document.createElement('button');
+    sp.textContent = text;
+    b.type = 'button'; b.className = 'btn btn-quiet'; b.textContent = 'Remove'; b.onclick = onRemove;
+    li.appendChild(sp); li.appendChild(b);
+    return li;
+  }
+  function empty(text) { var li = document.createElement('li'); li.textContent = text; return li; }
+
+  function render() {
+    var sl = $('storeList'), pl = $('productList'), sel = $('pStore'), names = {};
+    sl.textContent = ''; pl.textContent = ''; sel.textContent = '';
+    stores.forEach(function (st) {
+      names[st.id] = st.name;
+      sl.appendChild(row(st.name + (st.network ? ' (' + st.network + ')' : ''), function () {
+        sb.from('stores').delete().eq('id', st.id).then(function (r) {
+          if (r.error) { say('Remove this store\u2019s products first.'); return; }
+          load();
+        });
+      }));
+      var o = document.createElement('option'); o.value = st.id; o.textContent = st.name; sel.appendChild(o);
+    });
+    if (!stores.length) sl.appendChild(empty('No stores yet.'));
+    products.forEach(function (p) {
+      pl.appendChild(row(p.name + ' (' + (NICHES[p.niche] || '') + (names[p.store_id] ? ', ' + names[p.store_id] : '') + ')', function () {
+        sb.from('products').delete().eq('id', p.id).then(function (r) {
+          if (r.error) { say('Could not remove: ' + r.error.message); return; }
+          load();
+        });
+      }));
+    });
+    if (!products.length) pl.appendChild(empty('No products yet.'));
+  }
+
+  function load() {
+    Promise.all([
+      sb.from('stores').select('*').order('name'),
+      sb.from('products').select('*').order('created_at')
+    ]).then(function (rs) {
+      if (rs[0].error || rs[1].error) { say('Could not load data. Did you run supabase-setup.sql?'); return; }
+      stores = rs[0].data; products = rs[1].data; render();
+    });
+  }
+
+  sb.auth.getSession().then(function (r) {
+    if (r.data && r.data.session) { show(true); load(); } else { show(false); }
+  });
+  sb.auth.onAuthStateChange(function (ev, session) { if (!session) show(false); });
+
+  $('loginForm').onsubmit = function (e) {
+    e.preventDefault(); say('Logging in...');
+    sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value }).then(function (r) {
+      if (r.error) { say('Login failed. Check your email and password.'); return; }
+      $('password').value = ''; say(''); show(true); load();
+    });
+  };
+
+  $('logout').onclick = function () {
+    sb.auth.signOut().then(function () { show(false); say('Logged out.'); });
+  };
+
+  $('storeForm').onsubmit = function (e) {
+    e.preventDefault();
+    var f = this, n = $('sName').value.trim();
+    if (!n) return;
+    sb.from('stores').insert({ name: n, network: $('sNet').value.trim() || null }).then(function (r) {
+      if (r.error) { say('Could not add store: ' + r.error.message); return; }
+      f.reset(); say('Store added.'); load();
+    });
+  };
+
+  $('productForm').onsubmit = function (e) {
+    e.preventDefault();
+    var f = this, link = $('pLink').value.trim(), img = $('pImg').value.trim();
+    if (!stores.length) { say('Add a store first.'); return; }
+    if (!/^https:\/\//i.test(link)) { say('The affiliate link must start with https://'); return; }
+    if (img && !/^(https:\/\/|[\w\-\/.]+$)/i.test(img)) { say('The image must be an https:// address or a file path like images/photo.jpg'); return; }
+    sb.from('products').insert({
+      name: $('pName').value.trim(), store_id: $('pStore').value, niche: $('pNiche').value,
+      badge: $('pBadge').value.trim() || null, verdict: $('pVerdict').value.trim() || null,
+      image: img || null, link: link
+    }).then(function (r) {
+      if (r.error) { say('Could not add product: ' + r.error.message); return; }
+      f.reset(); say('Product added. It is now live on the site.'); load();
+    });
+  };
+})();
+</script>
+</body>
+</html>
